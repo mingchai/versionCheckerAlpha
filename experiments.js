@@ -1,4 +1,9 @@
 const axios = require('axios');
+const express = require('express');
+const app = express();
+
+app.listen(3000)
+
 let {log} = console;
 let urlInput = process.argv[2];
 let response;
