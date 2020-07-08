@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
+<%- include('./partials/header') %> 
     <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <p><%= title %> for Your Apps</p>
     <form action="/" method="post">
       <label>URL:</label>
       <br>
       <input type="text" name="urlInput">
       <input type="submit" value="Fetch Version">
     </form>
-  </body>
-</html>
+<%- include('./partials/footer') %> 
