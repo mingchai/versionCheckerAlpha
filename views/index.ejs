@@ -5,6 +5,14 @@
       <label>URL:</label>
       <br>
       <input type="text" name="urlInput">
+      <br>
+      <label>Grouping:</label>
+      <br>
+      <input type="text" name="grouping">
+      <br>
       <input type="submit" value="Fetch Version">
     </form>
+    <% versionInfo.forEach(element => { %>
+     <p><%- element.version %></p>
+    <% }) %>
 <%- include('./partials/footer') %> 
