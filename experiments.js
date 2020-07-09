@@ -34,10 +34,10 @@ const psFetcher = async function fetcher(url) {
     }
   } catch (error) {
     if (error.code == "ECONNREFUSED") {
-      log("Connection was refused - check the URL that was entered");
+      return ("Connection was refused - check the URL that was entered");
     }
     if (error.response.status !== 200) {
-      log(`Page returned with status ${error.response.status}`);
+      return (`Page returned with status ${error.response.status}`);
     }
   }
 };
