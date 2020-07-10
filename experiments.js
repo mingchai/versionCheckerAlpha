@@ -14,11 +14,16 @@ const psFetcher = async function fetcher(url) {
       log(`Page returned Status Code ${response.status}`);
     }
     data = response.data.split("\n");
+
     let versionPatternWithHash = /\d{0,1}(\.\d{1,2})+-./gm;
     let versionNumberPattern = /\d(\.\d{1,2})+/gm;
     let versionNumberPattern1WithHash = /\d{0,1}(\.\d{1,2})+\s-\s.{7}/gm;
+    let snapshotVersion = /\d{0,1}(\.\d{1,2})+-.+\s-\s.{7}/gm;
+
     for (let elm of data) {
-      if (elm.includes("<td") && elm.match(versionPatternWithHash)) {
+      if (elm.includes("<td") && elm.match(snapshotVersion)) {
+        return elm.match(snapshotVersion).toString();
+      } else if (elm.includes("<td") && elm.match(versionPatternWithHash)) {
         log(elm.match(versionNumberPattern).toString());
         return elm.match(versionNumberPattern).toString();
       } else if (
@@ -26,18 +31,20 @@ const psFetcher = async function fetcher(url) {
         elm.match(versionNumberPattern1WithHash)
       ) {
         log(
-          `Version for ${urlInput}: ${elm
+          `Version for ${url}: ${elm
             .match(versionNumberPattern1WithHash)
             .toString()}`
         );
+        return elm.match(versionNumberPattern1WithHash).toString();
       }
     }
   } catch (error) {
+    log(error);
     if (error.code == "ECONNREFUSED") {
-      return ("Connection was refused - check the URL that was entered");
+      return "Connection was refused - check the URL that was entered";
     }
     if (error.response.status !== 200) {
-      return (`Page returned with status ${error.response.status}`);
+      return `Page returned with status ${error.response.status}`;
     }
   }
 };
@@ -48,9 +55,6 @@ async function ipsFetcher(url) {
 }
 
 exports.psFetcher = psFetcher;
-// fetcher('https://demo.omegasys.eu/');
-// fetcher(urlInput);
-// ipsFetcher('https://wow-ps.omegasys.eu');
 
 // Matches 4.10.0 Version
 // /\d{0,1}(\.\d{1,2})+-.+\s-\s.+/gm
