@@ -5,10 +5,8 @@ const psFetcher = experiments.psFetcher;
 const {log, error} = console;
 const knex = require('../db/client');
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
-  // res.render('index', { title: 'Version Checker' });
-  knex.select("*").from("versionTracker").orderBy("createdAt", "DESC").then(versionInfo =>{
+  knex.select("*").from("versionTracker").orderBy("grouping", "ASC").orderBy("createdAt", "DESC").then(versionInfo =>{
     res.render("./index", {versionInfo, title: 'Version Checker'});
 })
 });
@@ -19,13 +17,13 @@ router.post("/", (req, res) => {
         let requestedURL = req.body.urlInput;
         let specifiedGrouping = req.body.grouping;
         let fetchedVersion = await psFetcher(requestedURL);
-        log(requestedURL, specifiedGrouping)
+        log(`URL submitted: ${requestedURL}, Grouping: ${specifiedGrouping}`);
+        
         const newEntry = {
           url: requestedURL,
           grouping: specifiedGrouping,
           version: fetchedVersion
         }
-      
 
         log("redirecting...")
         knex.insert(newEntry)
@@ -35,9 +33,11 @@ router.post("/", (req, res) => {
             res.redirect("/");
           })
         }
-        fetcher();
+      
+      fetcher();
   } catch(err) {
     error(err);
+    res.render("./index", {err})
   }
 })
 
