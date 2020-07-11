@@ -1,18 +1,36 @@
-<%- include('./partials/header') %> 
-    <h1><%= title %></h1>
-    <p><%= title %> for Your Apps</p>
-    <form action="/" method="post">
-      <label>URL:</label>
-      <br>
-      <input type="text" name="urlInput">
-      <br>
-      <label>Grouping:</label>
-      <br>
-      <input type="text" name="grouping">
-      <br>
-      <input type="submit" value="Fetch Version">
-    </form>
-    <% versionInfo.forEach(element => { %>
-     <p><%- element.version %></p>
-    <% }) %>
-<%- include('./partials/footer') %> 
+<%- include('./partials/header') %>
+<h1><%= title %></h1>
+<p><%= title %> for Your Apps</p>
+<form action="/" method="post">
+  <label>URL:</label>
+  <br />
+  <input type="text" name="urlInput" />
+  <br />
+  <label>Grouping:</label>
+  <br />
+  <input type="text" name="grouping" />
+  <br />
+  <input type="submit" value="Fetch Version" />
+</form>
+
+<table class="table">
+  <thead class="thead-dark">
+    <th scope="col">Application URL</th>
+    <th scope="col">Grouping</th>
+    <th scope="col">Version</th>
+    <th scope="col">Fetch Date</th>
+  </thead>
+  <% versionInfo.forEach(element => { %>
+  <tr>
+    <td><%- element.url %></td>
+    <td><%- element.grouping %></td>
+    <td><%- element.version %></td>
+    <td>
+      <%- element.createdAt.toLocaleString('en-US', { year: 'numeric', month:
+      'long', day: 'numeric', hour:'numeric', minute: 'numeric',
+      second:'numeric', timeZoneName: 'short' }) %>
+    </td>
+  </tr>
+  <% }) %>
+</table>
+<%- include('./partials/footer') %>
