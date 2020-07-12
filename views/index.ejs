@@ -30,6 +30,7 @@
     <th scope="col">Application URL</th>
     <th scope="col">Grouping</th>
     <th scope="col">Version</th>
+    <th scope="col">App Name</th>
     <th scope="col">Fetch Date</th>
   </thead>
   <% versionInfo.forEach(element => { %>
@@ -37,6 +38,7 @@
     <td><%- element.url %></td>
     <td><%- element.grouping %></td>
     <td><%- element.version %></td>
+    <td><%- element.appName %></td>
     <td>
       <%- element.createdAt.toLocaleString('en-US', { year: 'numeric', month:
       'long', day: 'numeric', hour:'numeric', minute: 'numeric',
