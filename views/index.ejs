@@ -2,15 +2,26 @@
 <h1><%= title %></h1>
 <p><%= title %> for Your Apps</p>
 <form action="/" method="post">
-  <label>URL:</label>
-  <br />
-  <input type="text" name="urlInput" />
-  <br />
-  <label>Grouping:</label>
-  <br />
-  <input type="text" name="grouping" />
-  <br />
-  <input type="submit" value="Fetch Version" />
+  <div class="form-group">
+    <label for="urlInput">URL:</label>
+    <input type="text" name="urlInput" class="form-control" id="urlInput"/>
+  </div>
+  <div class="form-row">
+    <div class="col">
+      <label>Grouping:</label>
+      <input type="text" name="grouping" class="form-control" id="grouping"/>
+    </div>
+    <div class="col">
+      <label for="appName">Application</label>
+      <select name="apps" id="apps" class="form-control">
+        <option value="psIps">PS/IPS</option>
+        <option value="tronTxs">Tron/TXS</option>
+        <option value="cmsIcs">CMS/ICS</option>
+      </select>
+    </div>
+  </div>
+  <br>
+  <button type="submit" value="Fetch Version" class="btn">Submit</button>
 </form>
 <br>
 <br>
