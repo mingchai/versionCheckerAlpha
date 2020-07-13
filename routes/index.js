@@ -1,11 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const experiments = require("../experiments");
-const psFetcher = experiments.psFetcher;
-
 const { log, error } = console;
 const knex = require("../db/client");
-const { ipsFetcher } = require("../experiments");
+const { psFetcher, ipsFetcher, tronFetcher, txsFetcher } = require("../experiments");
 
 router.get("/", function (req, res, next) {
   knex
@@ -25,7 +22,7 @@ router.post("/", (req, res) => {
 
   if (application == "PS/IPS") {
     try {
-      async function fetcher() {
+      async function psIpsfetcher() {
         const [psVersion, psAppName] = await psFetcher(requestedURL);
         const [ipsVersion, ipsAppName] = await ipsFetcher(requestedURL);
 
@@ -55,13 +52,48 @@ router.post("/", (req, res) => {
           });
       }
 
-      fetcher();
+      psIpsfetcher();
     } catch (err) {
       error(err);
       res.render("./index", { err });
     }
   } else if(application == "Tron/TXS"){
-    // TODO: add fetch for other applications
+    try {
+      async function tronTxsfetcher() {
+        const [tronVersion, tronAppName] = await tronFetcher(requestedURL);
+        const [txsVersion, txsAppName] = await txsFetcher(requestedURL);
+
+        log(`URL submitted: ${requestedURL}, Grouping: ${specifiedGrouping}`);
+
+        const newTronEntry = {
+          url: requestedURL,
+          grouping: specifiedGrouping,
+          version: tronVersion,
+          appName: tronAppName
+        };
+
+        const newTxsEntry = {
+          url: requestedURL,
+          grouping: specifiedGrouping,
+          version: txsVersion,
+          appName: txsAppName
+        };
+
+        log("redirecting...");
+        knex
+          .insert([newTronEntry, newTxsEntry])
+          .into("versionTracker")
+          .returning("*")
+          .then(() => {
+            res.redirect("/");
+          });
+      }
+
+      tronTxsfetcher();
+    } catch (err) {
+      error(err);
+      res.render("./index", { err });
+    }
   }
 });
 

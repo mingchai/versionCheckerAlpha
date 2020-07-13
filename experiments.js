@@ -1,11 +1,13 @@
 const axios = require("axios");
-const express = require("express");
-
 const { log } = console;
 let response;
 let data;
 const psApp = "PS";
-const ipsApp = "IPS" ;
+const ipsApp = "IPS";
+const tronApp = "Tron";
+const txsApp = "TXS";
+const cmsApp = "CMS";
+const icsApp = "ICS";
 // Matches to just the version number
 // let versionNumberPattern = /\d(\.\d{1,2})+/gm;
 
@@ -55,6 +57,49 @@ module.exports = {
     let version = response.data;
     return [version, ipsApp];
   },
+
+  tronFetcher: async function tronFetcher(url) {
+    try {
+      response = await axios.get(`${url}/omegatron/spr/SystemStatus`);
+      if (response.status !== 200) {
+        log(`Page returned Status Code ${response.status}`);
+      }
+      log(response)
+      data = response.data.split("\n");
+
+      for (let elm of data) {
+        if (elm.includes("<td") && elm.match(snapshotVersion)) {
+          log(elm.match(snapshotVersion).toString());
+          return [elm.match(snapshotVersion).toString(), tronApp];
+        } else if (
+          elm.includes("<td") &&
+          elm.match(versionNumberPatternWithHash)
+        ) {
+          log(
+            `Version for ${url}: ${elm
+              .match(versionNumberPatternWithHash)
+              .toString()}`
+          );
+          return [elm.match(versionNumberPatternWithHash).toString(), tronApp];
+        }
+      }
+    } catch (error) {
+      log(error);
+      if (error.code == "ECONNREFUSED") {
+        return "Connection was refused - check the URL that was entered";
+      }
+      if (error.response.status !== 200) {
+        return `Page returned with status ${error.response.status}`;
+      }
+    }
+  },
+
+  txsFetcher: async function ipsFetcher(url) {
+    response = await axios.get(`${url}/omegatxs/pub/api/version`);
+    log(response.data);
+    let version = response.data;
+    return [version, txsApp];
+  }
 };
 
 // Matches 4.10.0 Version
