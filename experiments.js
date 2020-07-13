@@ -94,11 +94,18 @@ module.exports = {
     }
   },
 
-  txsFetcher: async function ipsFetcher(url) {
+  txsFetcher: async function txsFetcher(url) {
     response = await axios.get(`${url}/omegatxs/pub/api/version`);
     log(response.data);
     let version = response.data;
     return [version, txsApp];
+  },
+
+  icsFetcher: async function icsFetcher(url) {
+    response = await axios.get(`${url}/ics/pub/api/version`);
+    log(response.data);
+    let version = response.data;
+    return [version, icsApp];
   }
 };
 

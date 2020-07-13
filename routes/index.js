@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { log, error } = console;
 const knex = require("../db/client");
-const { psFetcher, ipsFetcher, tronFetcher, txsFetcher } = require("../experiments");
+const { psFetcher, ipsFetcher, tronFetcher, txsFetcher, icsFetcher } = require("../experiments");
 
 router.get("/", function (req, res, next) {
   knex
@@ -90,6 +90,35 @@ router.post("/", (req, res) => {
       }
 
       tronTxsfetcher();
+    } catch (err) {
+      error(err);
+      res.render("./index", { err });
+    }
+  } else {
+    try {
+      async function cmsIcsfetcher() {
+        const [icsVersion, icsAppName] = await icsFetcher(requestedURL);
+
+        log(`URL submitted: ${requestedURL}, Grouping: ${specifiedGrouping}`);
+
+        const newIcsEntry = {
+          url: requestedURL,
+          grouping: specifiedGrouping,
+          version: icsVersion,
+          appName: icsAppName
+        };
+
+        log("redirecting...");
+        knex
+          .insert(newIcsEntry)
+          .into("versionTracker")
+          .returning("*")
+          .then(() => {
+            res.redirect("/");
+          });
+      }
+
+      cmsIcsfetcher();
     } catch (err) {
       error(err);
       res.render("./index", { err });
