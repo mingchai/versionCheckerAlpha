@@ -38,10 +38,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-const PORT = 3000;
-const HOST = 'localhost';
-app.listen(PORT, HOST, () => {
-    console.log(`Server listening on http://${HOST}:${PORT}`);
-});
-
 module.exports = app;
